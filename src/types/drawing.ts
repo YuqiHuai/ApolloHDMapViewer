@@ -24,6 +24,7 @@ export type LaneDrawingType = {
     id: string;
     x: number;
     y: number;
+    rotation: number;
     boundary: number[][];
     central: number[][];
 

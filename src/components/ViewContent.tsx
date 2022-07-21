@@ -24,6 +24,14 @@ const to_points_array = (points: Point[]) => {
   return result;
 }
 
+function calculate_degree(x1: number, y1: number, x2: number, y2: number): number {
+  let result = Math.atan2(y2 - y1, x2 - x1) * 57.2958;
+  if (result > 90) {
+    return result - 180;
+  }
+  return result
+}
+
 function extract_lane_lines(map: Map): LaneDrawingType[] {
   const result: LaneDrawingType[] = [];
 
@@ -43,8 +51,10 @@ function extract_lane_lines(map: Map): LaneDrawingType[] {
       centralLines.push(to_points_array(v.lineSegment.point))
     })
 
+    const rotation = calculate_degree(centralLines[0][0], centralLines[0][1], centralLines[0][2], centralLines[0][3])
     result.push({
       id: value.id.id, x: centralLines[0][0], y: centralLines[0][1],
+      rotation: rotation,
       boundary: lines,
       central: centralLines,
       shouldDraw: true, shouldDrawCentral: true
@@ -206,7 +216,9 @@ const ViewContent: React.FC<ViewContentProps> = ({ map, checkedList }) => {
               if (checkedList.includes("Lane ID")) {
                 result.push(
                   <KonvaText key={idCounter++} x={value.x} y={value.y} text={value.id} fontSize={1} scaleY={-1}
-                    opacity={laneSelection.includes(value.id) ? 1 : 0.1} />
+                    opacity={laneSelection.includes(value.id) ? 1 : 0.1}
+                    rotation={value.rotation}
+                  />
                 );
               }
               if (checkedList.includes("Lane Central Curve")) {
