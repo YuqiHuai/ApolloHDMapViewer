@@ -84,6 +84,7 @@ function extract_signals(map: Map): SignalDrawingType[] {
 
 
   map.signal.forEach(value => {
+    if (!value.boundary) return;
     const boundaryPoints = to_points_array(value.boundary.point);
     const stopLinePoints = to_points_array(value.stopLine[0].segment[0].lineSegment.point);
     result.push({
@@ -108,6 +109,7 @@ const ViewContent: React.FC<ViewContentProps> = ({ map, checkedList }) => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const updateSize = () => {
+    if (windowRef.current === null) return;
     setWidth(windowRef.current.offsetWidth);
     setHeight(windowRef.current.offsetHeight);
   }
@@ -297,6 +299,7 @@ const ViewContent: React.FC<ViewContentProps> = ({ map, checkedList }) => {
         </Collapse>
       </Drawer>
       <div style={{ position: 'absolute', right: 0, bottom: 0, padding: 5 }}>
+          {/* TODO: implement coordinate feature */}
         <Text>{`(${123123}, ${123123})`}</Text>
       </div>
     </div>
